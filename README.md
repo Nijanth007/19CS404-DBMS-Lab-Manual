@@ -1,311 +1,294 @@
-# Experiment 2: DDL Commands
+# Experiment 3: DML Commands
 
 ## AIM
-To study and implement DDL commands and different types of constraints.
+To study and implement DML (Data Manipulation Language) commands.
 
 ## THEORY
 
-### 1. CREATE
-Used to create a new relation (table).
-
+### 1. INSERT INTO
+Used to add records into a relation.
+These are three type of INSERT INTO queries which are as
+A)Inserting a single record
+**Syntax (Single Row):**
+```sql
+INSERT INTO table_name (field_1, field_2, ...) VALUES (value_1, value_2, ...);
+```
+**Syntax (Multiple Rows):**
+```sql
+INSERT INTO table_name (field_1, field_2, ...) VALUES
+(value_1, value_2, ...),
+(value_3, value_4, ...);
+```
+**Syntax (Insert from another table):**
+```sql
+INSERT INTO table_name SELECT * FROM other_table WHERE condition;
+```
+### 2. UPDATE
+Used to modify records in a relation.
+Syntax:
+```sql
+UPDATE table_name SET column1 = value1, column2 = value2 WHERE condition;
+```
+### 3. DELETE
+Used to delete records from a relation.
+**Syntax (All rows):**
+```sql
+DELETE FROM table_name;
+```
+**Syntax (Specific condition):**
+```sql
+DELETE FROM table_name WHERE condition;
+```
+### 4. SELECT
+Used to retrieve records from a table.
 **Syntax:**
 ```sql
-CREATE TABLE (
-  field_1 data_type(size),
-  field_2 data_type(size),
-  ...
-);
+SELECT column1, column2 FROM table_name WHERE condition;
 ```
-### 2. ALTER
-Used to add, modify, drop, or rename fields in an existing relation.
-(a) ADD
-```sql
-ALTER TABLE std ADD (Address CHAR(10));
-```
-(b) MODIFY
-```sql
-ALTER TABLE relation_name MODIFY (field_1 new_data_type(size));
-```
-(c) DROP
-```sql
-ALTER TABLE relation_name DROP COLUMN field_name;
-```
-(d) RENAME
-```sql
-ALTER TABLE relation_name RENAME COLUMN old_field_name TO new_field_name;
-```
-### 3. DROP TABLE
-Used to permanently delete the structure and data of a table.
-```sql
-DROP TABLE relation_name;
-```
-### 4. RENAME
-Used to rename an existing database object.
-```sql
-RENAME TABLE old_relation_name TO new_relation_name;
-```
-### CONSTRAINTS
-Constraints are used to specify rules for the data in a table. If there is any violation between the constraint and the data action, the action is aborted by the constraint. It can be specified when the table is created (using CREATE TABLE) or after it is created (using ALTER TABLE).
-### 1. NOT NULL
-When a column is defined as NOT NULL, it becomes mandatory to enter a value in that column.
-Syntax:
-```sql
-CREATE TABLE Table_Name (
-  column_name data_type(size) NOT NULL
-);
-```
-### 2. UNIQUE
-Ensures that values in a column are unique.
-Syntax:
-```sql
-CREATE TABLE Table_Name (
-  column_name data_type(size) UNIQUE
-);
-```
-### 3. CHECK
-Specifies a condition that each row must satisfy.
-Syntax:
-```sql
-CREATE TABLE Table_Name (
-  column_name data_type(size) CHECK (logical_expression)
-);
-```
-### 4. PRIMARY KEY
-Used to uniquely identify each record in a table.
-Properties:
-Must contain unique values.
-Cannot be null.
-Should contain minimal fields.
-Syntax:
-```sql
-CREATE TABLE Table_Name (
-  column_name data_type(size) PRIMARY KEY
-);
-```
-### 5. FOREIGN KEY
-Used to reference the primary key of another table.
-Syntax:
-```sql
-CREATE TABLE Table_Name (
-  column_name data_type(size),
-  FOREIGN KEY (column_name) REFERENCES other_table(column)
-);
-```
-### 6. DEFAULT
-Used to insert a default value into a column if no value is specified.
-
-Syntax:
-```sql
-CREATE TABLE Table_Name (
-  col_name1 data_type,
-  col_name2 data_type,
-  col_name3 data_type DEFAULT 'default_value'
-);
-```
-
 **Question 1**
-
----
-Insert the below data into the Employee table, allowing the Department and Salary columns to take their default values.
+Write a SQL statement to Update the product_name to 'Premium Bread' whose product ID is 5 in the products table.
 ```
-EmployeeID  Name         Position
-----------  -----------  ----------
-4           Emily White  Analyst
-```
-Note: The Department and Salary columns will use their default values. 
+Products table
 
+---------------
+product_id
+product_name
+category
+cost_price
+sell_price
+reorder_lvl
+quantity
+supplier_id
+```
 ```sql
-INSERT INTO Employee (EmployeeID, Name, Position) VALUES (4, 'Emily White', 'Analyst');
+UPDATE products SET product_name = 'Premium Bread' WHERE product_id = 5;
 ```
 
 **Output:**
 
-<img width="1083" height="283" alt="Screenshot 2025-05-13 200015" src="https://github.com/user-attachments/assets/236bc06a-4b84-412d-b24b-2e10d207a6b6" />
-
+<img width="1453" height="228" alt="image" src="https://github.com/user-attachments/assets/833c3f0e-f678-4d26-aa65-a8e10fb868d7" />
 
 **Question 2**
 ---
-In the Employee table, insert a record where some fields are NULL, another record where all fields are filled without any NULL values, and a third record where some fields are filled, and others are left as NULL.
+Write a SQL statement to Increase the salary by 500 and email as 'updated' for employees with job ID 'SA_REP' and commission percentage greater than 0.15
 ```
-EmployeeID  Name          Position    Department  Salary
-----------  ------------  ----------  ----------  ----------
-5           George Clark  Consultant
-7           Noah Davis    Manager     HR          60000
-8           Ava Miller    Consultant  IT
+Employees table
+
+---------------
+employee_id
+first_name
+last_name
+email
+phone_number
+hire_date
+job_id
+salary
+commission_pct
+manager_id
+department_id
 ```
 
 ```sql
-INSERT INTO Employee VALUES (5, 'George Clark', 'Consultant', NULL, NULL);
-INSERT INTO Employee VALUES (7, 'Noah Davis', 'Manager', 'HR', 60000);
-INSERT INTO Employee VALUES (8, 'Ava Miller', 'Consultant', 'IT', NULL);
+UPDATE EMPLOYEES SET salary = salary + 500, email = 'updated' WHERE job_id = 'SA_REP' AND commission_pct > 0.15;
 ```
 
 **Output:**
 
-<img width="1161" height="194" alt="Screenshot 2025-05-13 200231" src="https://github.com/user-attachments/assets/3142dc98-f119-4702-aa8e-2bd7b8dba9df" />
+<img width="1224" height="319" alt="image-1" src="https://github.com/user-attachments/assets/75762862-4311-4fab-a8e6-88f4667fee83" />
 
 **Question 3**
 ---
-Create a table named Invoices with the following constraints:
-- InvoiceID as INTEGER should be the primary key.
-- InvoiceDate as DATE.
-- Amount as REAL should be greater than 0.
-- DueDate as DATE should be greater than the InvoiceDate.
-- OrderID as INTEGER should be a foreign key referencing Orders(OrderID).
+Update the reorder level to 40 pieces for all products belonging to the 'Grocery' category in the products table.
+```
+PRODUCTS TABLE
 
+name               type
+-----------------  ---------------
+product_id         INT
+product_name       VARCHAR(100)
+category           VARCHAR(50)
+cost_price         DECIMAL(10,2)
+sell_price         DECIMAL(10,2)
+reorder_lvl        INT
+quantity           INT
+supplier_id        INT
+```
 
 ```sql
-CREATE TABLE Invoices (
-    InvoiceID INTEGER PRIMARY KEY,
-    InvoiceDate DATE,
-    Amount REAL CHECK (Amount > 0),
-    DueDate DATE CHECK (DueDate > InvoiceDate),
-    OrderID INTEGER,
-    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
-);
+UPDATE products SET reorder_lvl = 40 WHERE category = 'Grocery';
 ```
 
 **Output:**
 
-<img width="1162" height="122" alt="Screenshot 2025-05-13 200607" src="https://github.com/user-attachments/assets/b2c39619-5182-4eeb-bff6-63e3b7be1d56" />
-
+<img width="1274" height="182" alt="image-2" src="https://github.com/user-attachments/assets/c081122b-a66e-4b53-ba62-f8835d9e1076" />
 
 **Question 4**
 ---
-Create a table named Department with the following constraints:
-- DepartmentID as INTEGER should be the primary key.
-- DepartmentName as TEXT should be unique and not NULL.
-- Location as TEXT.
+Write a SQL query to Delete a Specific Surgery whose ID is 3
+
+Sample table: Surgeries
+
+attributes: surgery_id, patient_id, surgeon_id, surgery_date
 
 ```sql
-CREATE TABLE Department (
-    DepartmentID INTEGER PRIMARY KEY,
-    DepartmentName TEXT NOT NULL,
-    Location TEXT,
-    UNIQUE(DepartmentName)
-);
+DELETE FROM Surgeries WHERE surgery_id = 3;
 ```
 
 **Output:**
 
-<img width="1196" height="126" alt="Screenshot 2025-05-13 200835" src="https://github.com/user-attachments/assets/24554a96-e4d8-4caa-a785-6d398af8a4d8" />
-
+<img width="1114" height="311" alt="image-3" src="https://github.com/user-attachments/assets/cec05be5-dd44-49c8-b7ea-09272497b62c" />
 
 **Question 5**
 ---
-Create a table named jobs including columns job_id, job_title, min_salary and max_salary, and make sure that, the default value for job_title is blank and min_salary is 8000 and max_salary is NULL will be entered automatically at the time of insertion if no value assigned for the specified columns.
+Write a SQL query to Delete customers with 'GRADE' 3 or 'AGENT_CODE' 'A008' whose 'OUTSTANDING_AMT' is less than 5000
+
+Sample table: Customer
+
+<img width="1202" height="123" alt="image-4" src="https://github.com/user-attachments/assets/a2194692-19a9-49f8-99df-be84a57c37e2" />
+
 
 ```sql
-CREATE TABLE jobs (
-    job_id INTEGER PRIMARY KEY,
-    job_title TEXT DEFAULT '',
-    min_salary INTEGER DEFAULT 8000,
-    max_salary INTEGER DEFAULT NULL
-);
+DELETE FROM Customer WHERE (GRADE = 3 OR AGENT_CODE = 'A008') AND OUTSTANDING_AMT < 5000;
 ```
 
 **Output:**
 
-<img width="1038" height="150" alt="Screenshot 2025-05-13 203519" src="https://github.com/user-attachments/assets/741e1428-7d6e-42ed-bc36-58abfce34393" />
-
+<img width="1171" height="248" alt="image-5" src="https://github.com/user-attachments/assets/27d48b5a-c01f-49c0-9941-efaee6d45929" />
 
 **Question 6**
 ---
-Create a table named Orders with the following constraints:
-OrderID as INTEGER should be the primary key.
-OrderDate as DATE should be not NULL.
-CustomerID as INTEGER should be a foreign key referencing Customers(CustomerID).
+Write a SQL statement to Find those salesmen with all information whose name containing the 1st character is 'N' and the 4th character is 'l' and rests may be any character.
+```
+salesman table
+
+cid         name         type        
+----------  -----------  ----------  
+0           salesman_id  numeric(5)  
+1           name         varchar(30)  
+2           city         varchar(15)  
+3           commission   decimal(5,2) 
+```
 
 ```sql
-CREATE TABLE Orders (
-    OrderID INTEGER PRIMARY KEY,
-    OrderDate DATE NOT NULL,
-    CustomerID INTEGER,
-    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
-);
+SELECT * FROM salesman WHERE name LIKE 'N__L%';
 ```
 
 **Output:**
 
-<img width="1279" height="169" alt="Screenshot 2025-05-13 203702" src="https://github.com/user-attachments/assets/24dc24fb-d3bd-4197-8b8e-353f34a967e6" />
-
+<img width="1059" height="307" alt="image-6" src="https://github.com/user-attachments/assets/3eccbab9-adf9-4d3e-bdc7-c13125a9fadd" />
 
 **Question 7**
 ---
-Write a SQL query to Add a new column Mobilenumber as number in the Student_details table.
-
-Sample table: Student_details
+Write a SQL query to assess the performance of value2 as 'Poor', 'Average', or 'Excellent' based on whether it is less than 30, between 30 and 70, or greater than 70 in the Calculations table
 ```
-
- cid              name             type             notnu  dflt_value  pk
----------------  ---------------  ---------------  -----  ----------  ----------
-0                RollNo           int              0                  1
-1                Name             VARCHAR(100)     1                  0
-2                Gender           TEXT             1                  0
-3                Subject          VARCHAR(30)      0                  0
-4                MARKS            INT (3)          0                  0
+cid         name        type        notnull     dflt_value  pk
+----------  ----------  ----------  ----------  ----------  ----------
+0           id          INTEGER     0                       1
+1           value1      REAL        0                       0
+2           value2      REAL        0                       0
+3           base        INTEGER     0                       0
+4           exponent    INTEGER     0                       0
+5           number      REAL        0                       0
+6           decimal     REAL        0                       0
 ```
-
 ```sql
-ALTER TABLE Student_details ADD Mobilenumber number;
+SELECT id, value2,
+    CASE 
+        WHEN value2 < 30 THEN 'Poor'
+        WHEN value2 BETWEEN 30 AND 70 THEN 'Average'
+        WHEN value2 > 70 THEN 'Excellent'
+    END AS performance 
+FROM calculations;
 ```
 
 **Output:**
 
-<img width="1170" height="217" alt="Screenshot 2025-05-13 203810" src="https://github.com/user-attachments/assets/323ad6b4-ddf3-4742-aac7-1e710a760aee" />
-
+<img width="768" height="405" alt="image-7" src="https://github.com/user-attachments/assets/322f8590-b06a-4594-beb2-838f31aa7bb3" />
 
 **Question 8**
 ---
-Write a SQL query to add a new column MobileNumber of type NUMBER and a new column Address of type VARCHAR(100) to the Student_details table.
+Write a SQL query to find all those customers who does not have any grade. Return customer_id, cust_name, city, grade, salesman_id.
+
+Sample table: customer
+```
+customer_id |   cust_name    |    city    | grade | salesman_id 
+-------------+----------------+------------+-------+-------------
+        3002 | Nick Rimando   | New York   |   100 |        5001
+        3007 | Brad Davis     | New York   |   200 |        5001
+        3005 | Graham Zusi    | California |   200 |        5002
+```
 
 ```sql
-ALTER TABLE Student_details ADD MobileNumber NUMBER;
-ALTER TABLE Student_details ADD Address VARCHAR(100);
+SELECT customer_id, cust_name, city, grade, salesman_id FROM customer WHERE grade IS NULL;
 ```
 
 **Output:**
 
-<img width="1174" height="233" alt="Screenshot 2025-05-13 203901" src="https://github.com/user-attachments/assets/f777b782-799f-40ae-9a02-577376a073ed" />
-
+<img width="1116" height="350" alt="image-8" src="https://github.com/user-attachments/assets/29b13175-f069-48b8-8625-d85ff247d467" />
 
 **Question 9**
 ---
-Create a table named Reviews with the following columns:
-- ReviewID as INTEGER
-- ProductID as INTEGER
-- Rating as REAL
-- ReviewText as TEXT
+Find Products with a Discounted Price Greater than a Given Amount:
 
+Write a query to list all products that have a discounted price greater than $100. Return product_id, original_price, discount_percentage, and discounted_price.
+
+Sample table: Products
+
+```
+product_id | original_price | discount_percentage
+
+"101"           "50"                "0.1"
+
+"102"           "150"               "0.15"
+
+"103"           "200"               "0.2"
+
+"104"           "300"               "0.25"
+```
 ```sql
-CREATE TABLE Reviews (
-    ReviewID INTEGER,
-    ProductID INTEGER,
-    Rating REAL,
-    ReviewText TEXT
-);
+SELECT 
+    product_id, 
+    original_price,
+    discount_percentage,
+    original_price * (1-discount_percentage) AS discounted_price 
+FROM Products
+WHERE discounted_price > 100;
 ```
 
 **Output:**
 
-<img width="992" height="190" alt="Screenshot 2025-05-13 204017" src="https://github.com/user-attachments/assets/ca9c1b18-85d5-4124-bd03-c03b632089c8" />
-
+<img width="1179" height="217" alt="image-9" src="https://github.com/user-attachments/assets/a9ef8625-a61b-422d-bb17-8e7c52aa11d0" />
 
 **Question 10**
 ---
-Insert all books from Out_of_print_books into Books
+Write a SQL statement to get the EmployeeID, FirstName, BirthDate, Age from employees table whose age is older than 50.
 
-Table attributes are ISBN, Title, Author, Publisher, YearPublished
+[Note: Calculate age from BirthDate field (consider current date as '2023-12-30')]
+employees table
+```
+cid         name        type        notnull     dflt_value  pk
+----------  ----------  ----------  ----------  ----------  ----------
+0           EmployeeID  INTEGER       0                       1
+1           LastName    VARCHAR(15)   0                       0
+2           FirstName   VARCHAR(15)   0                       0
+3           BirthDate   DATETIME      0                       0
+4           Photo       VARCHAR(25)   0                       0
+5           Notes       VARCHAR(10)   0                       0
+```
 
 ```sql
-INSERT INTO Books SELECT * FROM Out_of_print_books;
+SELECT 
+    EmployeeID, 
+    FirstName, 
+    BirthDate, 
+    CAST((JULIANDAY('2023-12-30') - JULIANDAY(BirthDate)) / 365.25 AS INTEGER) AS age
+FROM employees 
+WHERE age > 50;
 ```
 
 **Output:**
 
-<img width="1186" height="165" alt="Screenshot 2025-05-13 204119" src="https://github.com/user-attachments/assets/8a71735d-2c20-4442-975b-66c2f72508fd" />
-
-
+<img width="968" height="556" alt="image-10" src="https://github.com/user-attachments/assets/f0055c9d-3d8c-416e-a4fe-9af9563daa18" />
 
 ## RESULT
-Thus, the SQL queries to implement different types of constraints and DDL commands have been executed successfully.
+Thus, the SQL queries to implement DML commands have been executed successfully.
