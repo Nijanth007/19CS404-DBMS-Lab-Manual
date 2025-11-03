@@ -1,294 +1,262 @@
-# Experiment 3: DML Commands
+# Experiment 4: Aggregate Functions, Group By and Having Clause
 
 ## AIM
-To study and implement DML (Data Manipulation Language) commands.
+To study and implement aggregate functions, GROUP BY, and HAVING clause with suitable examples.
 
 ## THEORY
 
-### 1. INSERT INTO
-Used to add records into a relation.
-These are three type of INSERT INTO queries which are as
-A)Inserting a single record
-**Syntax (Single Row):**
-```sql
-INSERT INTO table_name (field_1, field_2, ...) VALUES (value_1, value_2, ...);
-```
-**Syntax (Multiple Rows):**
-```sql
-INSERT INTO table_name (field_1, field_2, ...) VALUES
-(value_1, value_2, ...),
-(value_3, value_4, ...);
-```
-**Syntax (Insert from another table):**
-```sql
-INSERT INTO table_name SELECT * FROM other_table WHERE condition;
-```
-### 2. UPDATE
-Used to modify records in a relation.
-Syntax:
-```sql
-UPDATE table_name SET column1 = value1, column2 = value2 WHERE condition;
-```
-### 3. DELETE
-Used to delete records from a relation.
-**Syntax (All rows):**
-```sql
-DELETE FROM table_name;
-```
-**Syntax (Specific condition):**
-```sql
-DELETE FROM table_name WHERE condition;
-```
-### 4. SELECT
-Used to retrieve records from a table.
+### Aggregate Functions
+These perform calculations on a set of values and return a single value.
+
+- **MIN()** – Smallest value  
+- **MAX()** – Largest value  
+- **COUNT()** – Number of rows  
+- **SUM()** – Total of values  
+- **AVG()** – Average of values
+
 **Syntax:**
 ```sql
-SELECT column1, column2 FROM table_name WHERE condition;
+SELECT AGG_FUNC(column_name) FROM table_name WHERE condition;
+```
+### GROUP BY
+Groups records with the same values in specified columns.
+**Syntax:**
+```sql
+SELECT column_name, AGG_FUNC(column_name)
+FROM table_name
+GROUP BY column_name;
+```
+### HAVING
+Filters the grouped records based on aggregate conditions.
+**Syntax:**
+```sql
+SELECT column_name, AGG_FUNC(column_name)
+FROM table_name
+GROUP BY column_name
+HAVING condition;
+
+
 ```
 **Question 1**
-Write a SQL statement to Update the product_name to 'Premium Bread' whose product ID is 5 in the products table.
-```
-Products table
+--
+How many medical records were created in each month?
 
----------------
-product_id
-product_name
-category
-cost_price
-sell_price
-reorder_lvl
-quantity
-supplier_id
-```
+Sample table:MedicalRecords Table
+
+<img width="1089" height="164" alt="image (6)" src="https://github.com/user-attachments/assets/c66e9cfd-6b77-46e0-975d-f6f626654ad6" />
+
+
 ```sql
-UPDATE products SET product_name = 'Premium Bread' WHERE product_id = 5;
+SELECT strftime('%Y-%m', Date) AS Month, COUNT(*) AS TotalRecords
+FROM MedicalRecords
+GROUP BY Month
+ORDER BY Month;
 ```
 
 **Output:**
 
-<img width="1453" height="228" alt="image" src="https://github.com/user-attachments/assets/833c3f0e-f678-4d26-aa65-a8e10fb868d7" />
+<img width="574" height="410" alt="image" src="https://github.com/user-attachments/assets/3ae13b16-f60d-4518-a562-b9968ddbcc0f" />
+
 
 **Question 2**
 ---
-Write a SQL statement to Increase the salary by 500 and email as 'updated' for employees with job ID 'SA_REP' and commission percentage greater than 0.15
-```
-Employees table
+Write a SQL Query to find how many medications are prescribed for each patient?
 
----------------
-employee_id
-first_name
-last_name
-email
-phone_number
-hire_date
-job_id
-salary
-commission_pct
-manager_id
-department_id
-```
+Sample table:MedicalRecords Table
+
+<img width="1089" height="164" alt="image (6) (1)" src="https://github.com/user-attachments/assets/1b84056f-0c3f-4695-9b89-82dd369696f1" />
+
+
 
 ```sql
-UPDATE EMPLOYEES SET salary = salary + 500, email = 'updated' WHERE job_id = 'SA_REP' AND commission_pct > 0.15;
+SELECT PatientID, COUNT(Medications) AS AvgMedications
+FROM MedicalRecords GROUP BY PatientID;
 ```
 
 **Output:**
 
-<img width="1224" height="319" alt="image-1" src="https://github.com/user-attachments/assets/75762862-4311-4fab-a8e6-88f4667fee83" />
+<img width="610" height="584" alt="image-1" src="https://github.com/user-attachments/assets/cd877944-903e-4c86-a8ad-734e8552966e" />
+
 
 **Question 3**
 ---
-Update the reorder level to 40 pieces for all products belonging to the 'Grocery' category in the products table.
-```
-PRODUCTS TABLE
+How many patients are there in each city?
 
-name               type
------------------  ---------------
-product_id         INT
-product_name       VARCHAR(100)
-category           VARCHAR(50)
-cost_price         DECIMAL(10,2)
-sell_price         DECIMAL(10,2)
-reorder_lvl        INT
-quantity           INT
-supplier_id        INT
-```
+Sample table: Patients Table
+
+<img width="1076" height="161" alt="image (3)" src="https://github.com/user-attachments/assets/5c282d0e-f9a0-4e6c-9775-8bd764941669" />
+
 
 ```sql
-UPDATE products SET reorder_lvl = 40 WHERE category = 'Grocery';
+SELECT Address, COUNT(PatientID) AS TotalPatients 
+FROM Patients
+GROUP BY Address;
 ```
 
 **Output:**
 
-<img width="1274" height="182" alt="image-2" src="https://github.com/user-attachments/assets/c081122b-a66e-4b53-ba62-f8835d9e1076" />
+<img width="588" height="381" alt="image-2" src="https://github.com/user-attachments/assets/e81e5554-49f5-4b1c-8e2f-d7daab654d09" />
+
 
 **Question 4**
 ---
-Write a SQL query to Delete a Specific Surgery whose ID is 3
+Write a SQL query that counts the number of unique salespeople. Return number of salespeople.
 
-Sample table: Surgeries
+Sample table: orders
+```
+ord_no      purch_amt   ord_date    customer_id  salesman_id
 
-attributes: surgery_id, patient_id, surgeon_id, surgery_date
+----------  ----------  ----------  -----------  -----------
+
+70001       150.5       2012-10-05  3005         5002
+
+70009       270.65      2012-09-10  3001         5005
+
+70002       65.26       2012-10-05  3002         5001
+```
 
 ```sql
-DELETE FROM Surgeries WHERE surgery_id = 3;
+SELECT COUNT(DISTINCT Salesman_id) COUNT FROM orders;
 ```
 
 **Output:**
 
-<img width="1114" height="311" alt="image-3" src="https://github.com/user-attachments/assets/cec05be5-dd44-49c8-b7ea-09272497b62c" />
+<img width="325" height="291" alt="image-3" src="https://github.com/user-attachments/assets/ec92a212-c529-4eef-b8a0-e15695b3dab5" />
+
 
 **Question 5**
 ---
-Write a SQL query to Delete customers with 'GRADE' 3 or 'AGENT_CODE' 'A008' whose 'OUTSTANDING_AMT' is less than 5000
+Write a SQL query to find how many employees have an income greater than 50K?
 
-Sample table: Customer
-
-<img width="1202" height="123" alt="image-4" src="https://github.com/user-attachments/assets/a2194692-19a9-49f8-99df-be84a57c37e2" />
-
+Table: employee
+```
+name        type
+----------  ----------
+id          INTEGER
+name        TEXT
+age         INTEGER
+city        TEXT
+income      INTEGER
+```
 
 ```sql
-DELETE FROM Customer WHERE (GRADE = 3 OR AGENT_CODE = 'A008') AND OUTSTANDING_AMT < 5000;
+SELECT COUNT(id) AS employees_count FROM employee WHERE income > 50000;
 ```
 
 **Output:**
 
-<img width="1171" height="248" alt="image-5" src="https://github.com/user-attachments/assets/27d48b5a-c01f-49c0-9941-efaee6d45929" />
+<img width="411" height="295" alt="image-4" src="https://github.com/user-attachments/assets/fbb8903f-ad36-4a82-b554-2f4162aa0933" />
+
 
 **Question 6**
 ---
-Write a SQL statement to Find those salesmen with all information whose name containing the 1st character is 'N' and the 4th character is 'l' and rests may be any character.
-```
-salesman table
+Write a SQL query to find the average length of email addresses (in characters):
 
-cid         name         type        
-----------  -----------  ----------  
-0           salesman_id  numeric(5)  
-1           name         varchar(30)  
-2           city         varchar(15)  
-3           commission   decimal(5,2) 
+Table: customer
+```
+name        type
+----------  ----------
+id          INTEGER
+name        TEXT
+city        TEXT
+email       TEXT
+phone       INTEGER
 ```
 
 ```sql
-SELECT * FROM salesman WHERE name LIKE 'N__L%';
+SELECT AVG(LENGTH(email)) AS avg_email_length FROM customer;
 ```
 
 **Output:**
 
-<img width="1059" height="307" alt="image-6" src="https://github.com/user-attachments/assets/3eccbab9-adf9-4d3e-bdc7-c13125a9fadd" />
+<img width="419" height="278" alt="image-5" src="https://github.com/user-attachments/assets/1e62a36e-4e94-427d-99e7-db21e81c7995" />
+
 
 **Question 7**
 ---
-Write a SQL query to assess the performance of value2 as 'Poor', 'Average', or 'Excellent' based on whether it is less than 30, between 30 and 70, or greater than 70 in the Calculations table
+Write a SQL query to find the total income of employees aged 40 or above.
+
+Table: employee
 ```
-cid         name        type        notnull     dflt_value  pk
-----------  ----------  ----------  ----------  ----------  ----------
-0           id          INTEGER     0                       1
-1           value1      REAL        0                       0
-2           value2      REAL        0                       0
-3           base        INTEGER     0                       0
-4           exponent    INTEGER     0                       0
-5           number      REAL        0                       0
-6           decimal     REAL        0                       0
+name        type
+----------  ----------
+id          INTEGER
+name        TEXT
+age         INTEGER
+city        TEXT
+income      INTEGER
 ```
+
 ```sql
-SELECT id, value2,
-    CASE 
-        WHEN value2 < 30 THEN 'Poor'
-        WHEN value2 BETWEEN 30 AND 70 THEN 'Average'
-        WHEN value2 > 70 THEN 'Excellent'
-    END AS performance 
-FROM calculations;
+SELECT SUM(income) AS total_income FROM employee WHERE age >= 40;
 ```
 
 **Output:**
 
-<img width="768" height="405" alt="image-7" src="https://github.com/user-attachments/assets/322f8590-b06a-4594-beb2-838f31aa7bb3" />
+<img width="356" height="290" alt="image-6" src="https://github.com/user-attachments/assets/c5b38e34-7c19-49b4-97f8-cba289859db3" />
+
 
 **Question 8**
 ---
-Write a SQL query to find all those customers who does not have any grade. Return customer_id, cust_name, city, grade, salesman_id.
+Write the SQL query that performs grouping by age groups and displays the maximum salary for each group, excluding groups where the maximum salary is not greater than 8000. 
 
-Sample table: customer
-```
-customer_id |   cust_name    |    city    | grade | salesman_id 
--------------+----------------+------------+-------+-------------
-        3002 | Nick Rimando   | New York   |   100 |        5001
-        3007 | Brad Davis     | New York   |   200 |        5001
-        3005 | Graham Zusi    | California |   200 |        5002
-```
+Note: Calculate the age group as multiples of 5.
+
+Eg., 20,22,23 comes in age group 20. 
+
+25,27,29 comes in age group 25.
+
+Sample table: customer1
+
+
+<img width="992" height="173" alt="unnamed" src="https://github.com/user-attachments/assets/ce6eb388-c23e-48b0-9eca-e72f376b1253" />
 
 ```sql
-SELECT customer_id, cust_name, city, grade, salesman_id FROM customer WHERE grade IS NULL;
+SELECT (age/5) * 5 AS age_group, MAX(salary)
+FROM customer1
+GROUP BY age_group
+HAVING MAX(salary) > 8000;
 ```
 
 **Output:**
 
-<img width="1116" height="350" alt="image-8" src="https://github.com/user-attachments/assets/29b13175-f069-48b8-8625-d85ff247d467" />
+<img width="558" height="336" alt="image-7" src="https://github.com/user-attachments/assets/b95f6bbb-9ee6-4cc4-a976-7a194e969a5d" />
+
 
 **Question 9**
 ---
-Find Products with a Discounted Price Greater than a Given Amount:
+Write the SQL query that accomplishes the grouping of data by addresses, calculates the sum of salaries for each address, and excludes addresses where the total salary sum is not greater than 2000.
 
-Write a query to list all products that have a discounted price greater than $100. Return product_id, original_price, discount_percentage, and discounted_price.
+Sample table: customer1
 
-Sample table: Products
+<img width="992" height="173" alt="unnamed (1)" src="https://github.com/user-attachments/assets/caf0b698-b334-4621-950c-542b7651e507" />
 
-```
-product_id | original_price | discount_percentage
-
-"101"           "50"                "0.1"
-
-"102"           "150"               "0.15"
-
-"103"           "200"               "0.2"
-
-"104"           "300"               "0.25"
-```
 ```sql
-SELECT 
-    product_id, 
-    original_price,
-    discount_percentage,
-    original_price * (1-discount_percentage) AS discounted_price 
-FROM Products
-WHERE discounted_price > 100;
+SELECT address, SUM(salary) FROM customer1 GROUP BY address HAVING SUM(salary) > 2000;
 ```
 
 **Output:**
 
-<img width="1179" height="217" alt="image-9" src="https://github.com/user-attachments/assets/a9ef8625-a61b-422d-bb17-8e7c52aa11d0" />
+<img width="553" height="457" alt="image-8" src="https://github.com/user-attachments/assets/74e247da-dc59-42a8-b65b-06b8160a3963" />
 
 **Question 10**
 ---
-Write a SQL statement to get the EmployeeID, FirstName, BirthDate, Age from employees table whose age is older than 50.
+Write the SQL query that accomplishes the selection of total cost of all products in each category from the "products" table and includes only those products where the total cost is greater than 50.
 
-[Note: Calculate age from BirthDate field (consider current date as '2023-12-30')]
-employees table
-```
-cid         name        type        notnull     dflt_value  pk
-----------  ----------  ----------  ----------  ----------  ----------
-0           EmployeeID  INTEGER       0                       1
-1           LastName    VARCHAR(15)   0                       0
-2           FirstName   VARCHAR(15)   0                       0
-3           BirthDate   DATETIME      0                       0
-4           Photo       VARCHAR(25)   0                       0
-5           Notes       VARCHAR(10)   0                       0
-```
+Sample table: products
+
+<img width="972" height="212" alt="unnamed (2)" src="https://github.com/user-attachments/assets/c42200b6-9728-437a-8229-ca6d6b2f2ea6" />
 
 ```sql
-SELECT 
-    EmployeeID, 
-    FirstName, 
-    BirthDate, 
-    CAST((JULIANDAY('2023-12-30') - JULIANDAY(BirthDate)) / 365.25 AS INTEGER) AS age
-FROM employees 
-WHERE age > 50;
+SELECT category_id, SUM(price) AS Total_Cost FROM products GROUP BY category_id HAVING Total_Cost > 50;
 ```
 
 **Output:**
 
-<img width="968" height="556" alt="image-10" src="https://github.com/user-attachments/assets/f0055c9d-3d8c-416e-a4fe-9af9563daa18" />
+
+<img width="555" height="309" alt="image-9" src="https://github.com/user-attachments/assets/bf2b6eeb-5ca7-4b32-a15a-493203bfdd51" />
+
 
 ## RESULT
-Thus, the SQL queries to implement DML commands have been executed successfully.
+Thus, the SQL queries to implement aggregate functions, GROUP BY, and HAVING clause have been executed successfully.
+
